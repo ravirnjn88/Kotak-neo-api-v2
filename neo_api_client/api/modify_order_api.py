@@ -1,8 +1,6 @@
 import neo_api_client
-from neo_api_client import rest
 from neo_api_client.exceptions import ApiException
 from neo_api_client.settings import ORDER_SOURCE
-from neo_api_client.urls import PROD_BASE_URL_GW_NAPI
 
 
 class ModifyOrder(object):
@@ -14,11 +12,11 @@ class ModifyOrder(object):
     def quick_modification(self, order_id, price, order_type, quantity, validity, instrument_token,
                            exchange_segment, product, trading_symbol, transaction_type, trigger_price,
                            dd, market_protection, disclosed_quantity, filled_quantity, amo):
-        header_params = {'Authorization': "Bearer " + self.api_client.configuration.bearer_token,
-                         "Sid": self.api_client.configuration.edit_sid,
-                         "Auth": self.api_client.configuration.edit_token,
-                         "neo-fin-key": self.api_client.configuration.get_neo_fin_key(),
-                         "Content-Type": "application/x-www-form-urlencoded"}
+        header_params = {
+            "Sid": self.api_client.configuration.edit_sid,
+            "Auth": self.api_client.configuration.edit_token,
+            "Content-Type": "application/x-www-form-urlencoded"
+        }
 
         body_params = {"tk": instrument_token, "mp": market_protection, "pc": product, "dd": dd,
                        "dq": disclosed_quantity, "vd": validity, "ts": trading_symbol, "tt": transaction_type,
@@ -28,10 +26,7 @@ class ModifyOrder(object):
 
         query_params = {"sId": self.api_client.configuration.serverId}
         try:
-            if self.api_client.configuration.base_url == PROD_BASE_URL_GW_NAPI:
-                URL = self.api_client.configuration.get_url_details("modify_order_napi")
-            else:
-                URL = self.api_client.configuration.get_url_details("modify_order")
+            URL = self.api_client.configuration.get_url_details("modify_order")
             orders_resp = self.rest_client.request(
                 url=URL, method='POST',
                 query_params=query_params,
@@ -47,11 +42,11 @@ class ModifyOrder(object):
     def modification_with_orderid(self, order_id, price, order_type, quantity, validity, instrument_token,
                                   exchange_segment, product, trading_symbol, transaction_type, trigger_price,
                                   dd, market_protection, disclosed_quantity, filled_quantity, amo):
-        header_params = {'Authorization': "Bearer " + self.api_client.configuration.bearer_token,
-                         "Sid": self.api_client.configuration.edit_sid,
-                         "Auth": self.api_client.configuration.edit_token,
-                         "neo-fin-key": self.api_client.configuration.get_neo_fin_key(),
-                         "Content-Type": "application/x-www-form-urlencoded"}
+        header_params = {
+            "Sid": self.api_client.configuration.edit_sid,
+            "Auth": self.api_client.configuration.edit_token,
+            "Content-Type": "application/x-www-form-urlencoded"
+        }
 
         order_book_resp = neo_api_client.OrderReportAPI(self.api_client).ordered_books()
         if "data" not in order_book_resp:
@@ -97,10 +92,7 @@ class ModifyOrder(object):
                         }
                         query_params = {"sId": self.api_client.configuration.serverId}
                         try:
-                            if self.api_client.configuration.base_url == PROD_BASE_URL_GW_NAPI:
-                                URL = self.api_client.configuration.get_url_details("modify_order_napi")
-                            else:
-                                URL = self.api_client.configuration.get_url_details("modify_order")
+                            URL = self.api_client.configuration.get_url_details("modify_order")
                             orders_resp = self.rest_client.request(
                                 url=URL, method='POST',
                                 query_params=query_params,

@@ -32,4 +32,5 @@ ORDER_FEED_URL_E43 = "wss://e43.kotaksecurities.com/realtime"
 #############################################################################
 #                               BASE_URL  URL
 #############################################################################
-BASE_URL = "https://lapi.kotaksecurities.com/algo-user/v5/get-base-url"
+# BASE_URL = "https://lapi.kotaksecurities.com/algo-user/v5/get-base-url"
+BASE_URL = "https://mis.kotaksecurities.com"

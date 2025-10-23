@@ -1,8 +1,6 @@
 import neo_api_client
-from neo_api_client import rest
 from neo_api_client.exceptions import ApiException
 from neo_api_client.settings import ORDER_SOURCE
-from neo_api_client.urls import PROD_BASE_URL_GW_NAPI
 
 
 class OrderAPI(object):
@@ -38,10 +36,8 @@ class OrderAPI(object):
     ):
         try:
             header_params = {
-                "Authorization": "Bearer " + self.api_client.configuration.bearer_token,
                 "Sid": self.api_client.configuration.edit_sid,
                 "Auth": self.api_client.configuration.edit_token,
-                "neo-fin-key": self.api_client.configuration.get_neo_fin_key(),
                 "Content-Type": "application/x-www-form-urlencoded",
             }
 
@@ -72,10 +68,7 @@ class OrderAPI(object):
             }
 
             query_params = {"sId": self.api_client.configuration.serverId}
-            if self.api_client.configuration.base_url == PROD_BASE_URL_GW_NAPI:
-                URL = self.api_client.configuration.get_url_details("place_order_napi")
-            else:
-                URL = self.api_client.configuration.get_url_details("place_order")
+            URL = self.api_client.configuration.get_url_details("place_order")
             orders_resp = self.rest_client.request(
                 url=URL, method='POST',
                 query_params=query_params,
@@ -99,18 +92,15 @@ class OrderAPI(object):
                             return {"Error": "The Given Order Status is " + str(item["ordSt"]),
                                     "Reason": item["rejRsn"]}
 
-        header_params = {'Authorization': "Bearer " + self.api_client.configuration.bearer_token,
-                         "Sid": self.api_client.configuration.edit_sid,
-                         "Auth": self.api_client.configuration.edit_token,
-                         "neo-fin-key": self.api_client.configuration.get_neo_fin_key(),
-                         "Content-Type": "application/x-www-form-urlencoded"}
+        header_params = {
+            "Sid": self.api_client.configuration.edit_sid,
+            "Auth": self.api_client.configuration.edit_token,
+            "Content-Type": "application/x-www-form-urlencoded"
+        }
         body_params = {"on": order_id, "am": amo}
 
         query_params = {"sId": self.api_client.configuration.serverId}
-        if self.api_client.configuration.base_url == PROD_BASE_URL_GW_NAPI:
-            URL = self.api_client.configuration.get_url_details("cancel_order_napi")
-        else:
-            URL = self.api_client.configuration.get_url_details("cancel_order")
+        URL = self.api_client.configuration.get_url_details("cancel_order")
         try:
             cancel_resp = self.rest_client.request(
                 url=URL, method='POST',
@@ -134,18 +124,16 @@ class OrderAPI(object):
                             return {"Error": "The Given Order Status is " + str(item["ordSt"]),
                                     "Reason": item["rejRsn"]}
 
-        header_params = {'Authorization': "Bearer " + self.api_client.configuration.bearer_token,
-                         "Sid": self.api_client.configuration.edit_sid,
-                         "Auth": self.api_client.configuration.edit_token,
-                         "neo-fin-key": self.api_client.configuration.get_neo_fin_key(),
-                         "Content-Type": "application/x-www-form-urlencoded"}
+        header_params = {
+            "Sid": self.api_client.configuration.edit_sid,
+            "Auth": self.api_client.configuration.edit_token,
+            "Content-Type": "application/x-www-form-urlencoded"
+        }
         body_params = {"on": order_id, "am": amo}
 
         query_params = {"sId": self.api_client.configuration.serverId}
-        if self.api_client.configuration.base_url == PROD_BASE_URL_GW_NAPI:
-            URL = self.api_client.configuration.get_url_details("cancel_cover_order_napi")
-        else:
-            URL = self.api_client.configuration.get_url_details("cancel_cover_order")
+
+        URL = self.api_client.configuration.get_url_details("cancel_cover_order")
         try:
             cancel_resp = self.rest_client.request(
                 url=URL, method='POST',
@@ -169,18 +157,15 @@ class OrderAPI(object):
                             return {"Error": "The Given Order Status is " + str(item["ordSt"]),
                                     "Reason": item["rejRsn"]}
 
-        header_params = {'Authorization': "Bearer " + self.api_client.configuration.bearer_token,
-                         "Sid": self.api_client.configuration.edit_sid,
-                         "Auth": self.api_client.configuration.edit_token,
-                         "neo-fin-key": self.api_client.configuration.get_neo_fin_key(),
-                         "Content-Type": "application/x-www-form-urlencoded"}
+        header_params = {
+            "Sid": self.api_client.configuration.edit_sid,
+            "Auth": self.api_client.configuration.edit_token,
+            "Content-Type": "application/x-www-form-urlencoded"
+        }
         body_params = {"on": order_id, "am": amo}
 
         query_params = {"sId": self.api_client.configuration.serverId}
-        if self.api_client.configuration.base_url == PROD_BASE_URL_GW_NAPI:
-            URL = self.api_client.configuration.get_url_details("cancel_bracket_order_napi")
-        else:
-            URL = self.api_client.configuration.get_url_details("cancel_bracket_order")
+        URL = self.api_client.configuration.get_url_details("cancel_bracket_order")
         try:
             cancel_resp = self.rest_client.request(
                 url=URL, method='POST',
