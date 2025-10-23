@@ -1,8 +1,8 @@
 import inspect
-import json
+
 import neo_api_client
+from neo_api_client import req_data_validation
 from neo_api_client.api_client import ApiClient
-from neo_api_client.exceptions import ApiException, ApiValueError
 
 
 class NeoAPI:
@@ -37,8 +37,7 @@ class NeoAPI:
                 Sets the edit token, SID, RID, and server ID in the configuration.
     """
 
-    def __init__(self, environment="uat", access_token=None, consumer_key=None, consumer_secret=None,
-                 neo_fin_key=None, base_url=None):
+    def __init__(self, environment="uat", access_token=None, neo_fin_key=None, consumer_key=None):
         """
     Initializes the class and sets up the necessary configurations for the API client.
 
@@ -65,21 +64,23 @@ class NeoAPI:
         self.on_open = None
 
         if not access_token:
-            neo_api_client.req_data_validation.validate_configuration(consumer_key, consumer_secret)
-            self.configuration = neo_api_client.NeoUtility(consumer_key=consumer_key, consumer_secret=consumer_secret,
-                                                           host=environment, base_url=base_url)
+            # neo_api_client.req_data_validation.validate_configuration(consumer_key, consumer_secret)
+            self.configuration = neo_api_client.NeoUtility(
+                # consumer_key=consumer_key, consumer_secret=consumer_secret,
+                                                           host=environment)
             self.api_client = ApiClient(self.configuration)
-            try:
-                session_init = neo_api_client.LoginAPI(self.api_client).session_init()
-                print(json.dumps({"data": session_init}))
-            except ApiException as ex:
-                error = ex
+            # try:
+            #     session_init = neo_api_client.LoginAPI(self.api_client).session_init()
+            #     print(json.dumps({"data": session_init}))
+            # except ApiException as ex:
+            #     error = ex
         elif access_token:
-            self.configuration = neo_api_client.NeoUtility(access_token=access_token, host=environment, base_url=base_url)
+            self.configuration = neo_api_client.NeoUtility(access_token=access_token, host=environment)
             self.api_client = ApiClient(self.configuration)
 
         self.NeoWebSocket = None
         self.configuration.neo_fin_key = neo_fin_key
+        self.configuration.consumer_key = consumer_key
 
     def place_order(
             self,
@@ -132,7 +133,7 @@ class NeoAPI:
         """
         if self.configuration.edit_token and self.configuration.edit_sid:
             try:
-                neo_api_client.req_data_validation.place_order_validation(exchange_segment, product, price, order_type,
+                req_data_validation.place_order_validation(exchange_segment, product, price, order_type,
                                                                           quantity, validity,
                                                                           trading_symbol, transaction_type)
 
@@ -499,6 +500,7 @@ class NeoAPI:
         Args:
             exchange_segment (str): A string representing the exchange segment to retrieve the list of scrips from.
 
+
         Raises:
             Exception: If there was an error retrieving the list of scrips.
 
@@ -714,7 +716,7 @@ class NeoAPI:
         """
         if self.configuration.edit_token and self.configuration.edit_sid:
             try:
-                log_off = neo_api_client.LogoutAPI(self.api_client).logging_out()
+                # log_off = neo_api_client.LogoutAPI(self.api_client).logging_out()
                 self.configuration.bearer_token = None
                 self.configuration.edit_sid = None
                 self.configuration.edit_token = None
@@ -771,7 +773,6 @@ class NeoAPI:
             error = {
                 'error': [{'message': 'Any of Mobile Number, UCC or totp is missing'}]}
             return error
-
         totp_login = neo_api_client.TotpAPI(self.api_client).totp_login(mobile_number=mobile_number, ucc=ucc, totp=totp)
         return totp_login
 
@@ -821,57 +822,3 @@ class NeoAPI:
             return error
         quotes_response = neo_api_client.QuotesAPI(self.api_client).get_quotes(instrument_tokens=instrument_tokens, quote_type=quote_type)
         return quotes_response
-
-    def qr_code_get_link(self, ucc=None):
-        """
-            Retrieves The redirect url for scanning the qrcode, which is the first step in qrcode login flow
-
-            Args:
-                ucc (str): Unique Client Code which you will find in mobile application/website under profile section
-
-            Returns:
-                {
-                    "data": {
-                        "baseDomain": "",
-                        "redirectUrl": ""
-                    }
-                }
-
-            Raises:
-                Error: If ucc is not provided.
-        """
-        if not ucc:
-            error = {
-                'error': [{'message': 'Validation Errors! UCC is missing'}]}
-            return error
-
-        qr_code_get_link = neo_api_client.QrCodeAPI(self.api_client).qr_code_get_link(ucc=ucc)
-        return qr_code_get_link
-
-    def qr_code_generate_session(self, ott=None, ucc=None):
-        """
-            Establishes a session with the API using the ott and ucc.
-
-            Parameters:
-            mpin (str): The 6 digit pin
-
-            Returns: {
-                "data": {"token": "", "sid": "", "rid": "", "hsServerId": "", "isUserPwdExpired": ,
-                    "caches": { "baskets": "", "lastUpdatedTS": "", "multiplewatchlists": "", "techchartpreferences": "" },
-                    "ucc": "", "greetingName": "", "isTrialAccount": , "dataCenter": "", "searchAPIKey": "",
-                    "derivativesRiskDisclosure": "", "mfAccess": , "dataCenterMap": , "dormancyStatus": "",
-                    "asbaStatus": "", "clientType": "", "isNRI":
-                }
-            }
-
-            Updates:
-            edit_token: sets the edit token obtained from the API response.
-        """
-
-        if not ott or not ucc:
-            error = {
-                'error': [{'message': 'Validation Errors! Either OTT or UCC is missing'}]}
-            return error
-
-        session_response = neo_api_client.QrCodeAPI(self.api_client).qr_code_generate_session(ott=ott, ucc=ucc)
-        return session_response

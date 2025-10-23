@@ -1,10 +1,5 @@
 import json
 
-import requests
-from neo_api_client import rest
-from neo_api_client import req_data_validation
-from neo_api_client.settings import PROD_URL
-
 
 class LoginAPI(object):
 
@@ -26,10 +21,10 @@ class LoginAPI(object):
         body_params = {
             "grant_type": "client_credentials",
         }
-        if not self.api_client.configuration.base_url:
-            return {
-                "Message": "Error occurred to initialise the session. Base url missing or incorrect value."
-            }
+        # if not self.api_client.configuration.base_url:
+        #     return {
+        #         "Message": "Error occurred to initialise the session. Base url missing or incorrect value."
+        #     }
         URL = self.api_client.configuration.get_domain(session_init=True) + "oauth2/token"
         session_init = self.rest_client.request(
             url=URL, method='POST',

@@ -47,17 +47,14 @@ Please follow the [installation procedure](#installation--usage) and then refer 
 
 ```python
 from neo_api_client import NeoAPI
-from neo_api_client import BaseUrl
 
-# ucc: Unique Client Code which you will find in mobile application/website under profile section
-base_url = BaseUrl(ucc='').get_base_url()
 
 # Either you pass consumer_key and consumer_secret or you pass acsess_token 
 # access_token: It is optional. If you have barrier token then pass and consumer_key and consumer_secret will be optional.
 # environment: By default it's uat. You can pass prod to connect to live server
 # neo_fin_key: Key you recieve at the time of api registration on your registered email id
 # base_url: You'll get by calling base_url api
-client = NeoAPI(consumer_key="", consumer_secret="", environment='prod', access_token=None, neo_fin_key=None, base_url=base_url)
+client = NeoAPI(environment='prod', access_token=None, neo_fin_key=None)
 
 
 # Login using TOTP
@@ -323,12 +320,9 @@ client.logout()
 
 | Class                  | Method                                                                                     | Description              |
 |------------------------|--------------------------------------------------------------------------------------------|--------------------------|
-| *Base Url*             | [**neo_api_client.BaseUrl**](docs/Base_url.md#base_url)                                    | Base Url                 |
-| *LoginAPI*             | [**neo_api_client.SessionINIT**](docs/Session_init.md#session_init)                        | Initialise Session       |
+| *Session Initiation*   | [**neo_api_client.SessionINIT**](docs/Session_init.md#session_init)                        | Initialise Session       |
 | *TOTP LoginAPI*        | [**neo_api_client.Totp_login**](docs/Totp_login.md#totp_login)                             | TOTP Login               |
 | *TOTP LoginAPI*        | [**neo_api_client.Totp_validation**](docs/Totp_validate.md#totp_validate)                  | TOTP Validation          |
-| *QR Code LoginAPI*     | [**neo_api_client.Qr_code_link**](docs/Qr_code_link.md#qr_code_link)                       | QR Code Get Link         |
-| *QR Code LoginAPI*     | [**neo_api_client.Qr_code_session**](docs/Qr_code_session.md#qr_code_session)              | QR Code Generate Session |
 | *Place Order*          | [**neo_api_client.placeorder**](docs/Place_Order.md#place_order)                           | Place Order              |
 | *Modify Order*         | [**neo_api_client.modifyorder**](docs/Modify_Order.md#modify_order)                        | Modify Order             |
 | *Cancel Order*         | [**neo_api_client.cancelorder**](docs/Cancel_Order.md#cancel_order)                        | Cancel Order             |

@@ -9,9 +9,7 @@ client.subscribe_to_orderfeed()
 
 ```python
 from neo_api_client import NeoAPI
-from neo_api_client import BaseUrl
 
-base_url = BaseUrl(ucc='').get_base_url()
 
 def on_message(message):
     print('[Res]: ', message)
@@ -26,7 +24,7 @@ def on_open(message):
 def on_close(message):
     print('[OnClose]: ', message)
 
-client = NeoAPI(consumer_key="", consumer_secret="", environment='prod', access_token=None, neo_fin_key=None, base_url=base_url)
+client = NeoAPI(environment='prod', access_token=None, neo_fin_key=None)
 client.totp_login(mobilenumber="", ucc="", totp='')
 client.totp_validate(mpin="")
 

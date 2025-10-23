@@ -10,7 +10,7 @@ client.session_2fa(OTP="")
 ```python
 from neo_api_client import NeoAPI
 
-client = NeoAPI(consumer_key="",consumer_secret="",environment="uat")
+client = NeoAPI(environment="uat")
 				
 try:
     # Login using password

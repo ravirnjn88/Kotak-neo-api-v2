@@ -2,11 +2,8 @@ import io
 import json
 
 import requests
-from neo_api_client import rest
 from neo_api_client.exceptions import ApiException
 import pandas as pd
-
-from neo_api_client.urls import PROD_BASE_URL_GW_NAPI
 
 
 class ScripSearch(object):
@@ -16,12 +13,13 @@ class ScripSearch(object):
 
     def scrip_search(self, symbol, exchange_segment, expiry, option_type, strike_price,
                      ignore_50multiple):
-        header_params = {'Authorization': "Bearer " + self.api_client.configuration.bearer_token}
 
-        if self.api_client.configuration.base_url == PROD_BASE_URL_GW_NAPI:
-            URL = self.api_client.configuration.get_url_details("scrip_master_napi")
-        else:
-            URL = self.api_client.configuration.get_url_details("scrip_master")
+        header_params = {
+            "Authorization": self.api_client.configuration.consumer_key,
+            "Content-Type": "application/x-www-form-urlencoded",
+        }
+
+        URL = self.api_client.configuration.get_url_details("scrip_master")
 
         try:
             scrip_report = self.rest_client.request(

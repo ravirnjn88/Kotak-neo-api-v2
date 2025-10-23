@@ -14,7 +14,7 @@ from neo_api_client import NeoAPI
 
 #Only need to initialize session and generate session token
 
-client = NeoAPI(consumer_key=" ",consumer_secret=" ",environment=" ")
+client = NeoAPI(environment='prod', access_token=None, neo_fin_key=None)
 
 instrument_tokens = [
     {"instrument_token": "Nifty 50", "exchange_segment": "nse_cm"},

@@ -30,9 +30,9 @@ def on_open(message):
 def on_close(message):
     print('[OnClose]: ', message)
 
-client = NeoAPI(consumer_key="", consumer_secret="", environment="prod", access_token=None, neo_fin_key=None)
-client.login(mobilenumber=" ", password=" ")
-client.session_2fa("")
+client = NeoAPI(environment='prod', access_token=None, neo_fin_key=None)
+client.totp_login(mobilenumber="", ucc="", totp='')
+client.totp_validate(mpin="")
 
 # Setup Callbacks for websocket events (Optional)
 client.on_message = on_message  # called when message is received from websocket

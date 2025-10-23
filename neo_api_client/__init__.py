@@ -27,9 +27,7 @@ from neo_api_client.HSWebSocketLib import HSIWebSocket
 from neo_api_client.urls import (WEBSOCKET_URL, PROD_BASE_URL, SESSION_PROD_BASE_URL, SESSION_UAT_BASE_URL, UAT_BASE_URL,
                                  SESSION_PROD_BASE_URL_ADC, PROD_BASE_URL_ADC)
 from neo_api_client.neo_api import NeoAPI
-from neo_api_client.base_url import BaseUrl
 from neo_api_client.api.modify_order_api import ModifyOrder
 from neo_api_client.api.scrip_search import ScripSearch
 from neo_api_client.api.totp_api import TotpAPI
 from neo_api_client.api.quotes_neo_symbol_api import QuotesAPI
-from neo_api_client.api.qr_code_api import QrCodeAPI

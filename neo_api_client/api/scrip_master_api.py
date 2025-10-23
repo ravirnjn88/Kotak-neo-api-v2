@@ -1,7 +1,6 @@
 from neo_api_client import rest
 from neo_api_client import settings
 from neo_api_client.exceptions import ApiException
-from neo_api_client.urls import PROD_BASE_URL_GW_NAPI
 
 
 class ScripMasterAPI(object):
@@ -10,11 +9,13 @@ class ScripMasterAPI(object):
         self.rest_client = api_client.rest_client
 
     def scrip_master_init(self, exchange_segment=None):
-        if self.api_client.configuration.base_url == PROD_BASE_URL_GW_NAPI:
-            URL = self.api_client.configuration.get_url_details("scrip_master_napi")
-        else:
-            URL = self.api_client.configuration.get_url_details("scrip_master")
-        header_params = {'Authorization': "Bearer " + self.rest_client.configuration.bearer_token}
+
+        header_params = {
+            "Authorization": self.api_client.configuration.consumer_key,
+            "Content-Type": "application/x-www-form-urlencoded",
+        }
+
+        URL = self.api_client.configuration.get_url_details("scrip_master")
 
         try:
             scrip_report = self.rest_client.request(url=URL, method='GET', headers=header_params)
