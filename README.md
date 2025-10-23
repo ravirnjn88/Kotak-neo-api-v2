@@ -89,17 +89,6 @@ client.totp_login(mobile_number="", ucc="", totp='')
 client.totp_validate(mpin="")
 
 
-# Alternate Login Method - Login using QR code (User can either login with TOTP or with QR flow)
-
-# ucc: Unique Client Code which you will find in mobile application/website under profile section
-# qr_code_get_link returns a qrcode
-client.qr_code_get_link(ucc='')
-
-# ott: You will recieve ott by scanning qr code through kotak's application 
-# ucc: Unique Client Code which you will find in mobile application/website under profile section
-# trade token is generated on passing ott to qr_code_generate_session 
-client.qr_code_generate_session(ott='', ucc='')
-
 
 # Once you have session token after completing 2FA, you can place the order by using below function
 # exchange_segment: Expected values are nse_cm, bse_cm, nse_fo, bse_fo, cde_fo. 
