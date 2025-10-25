@@ -50,12 +50,16 @@ Please follow the [installation procedure](#installation--usage) and then refer 
 from neo_api_client import NeoAPI
 
 
-# Either you pass consumer_key and consumer_secret or you pass acsess_token 
-# access_token: It is optional. If you have barrier token then pass and consumer_key and consumer_secret will be optional.
-# environment: By default it's uat. You can pass prod to connect to live server
-# neo_fin_key: Key you recieve at the time of api registration on your registered email id
+ 
+# access_token: It is optional. 
+# environment: You pass prod to connect to live server
+# neo_fin_key: Key you recieve at the time of api registration on your registered email id. Pass None if not available
 # base_url: You'll get by calling base_url api
-client = NeoAPI(environment='prod', access_token=None, neo_fin_key=None)
+# consumer_key: this is the token that is available on your NEO app or website.
+# To get consumer key, login to kotak NEO app or web, then go to invest tab, click trade api card. Here generate application.
+# with default application, you will have a copyable token. Pass this token in consumer_key inside single quotes.
+
+client = NeoAPI(environment='prod', access_token=None, neo_fin_key=None, consumer_key='YOUR_TOKEN_FROM_NEO_APP_OR_WEB')
 
 
 # Login using TOTP
