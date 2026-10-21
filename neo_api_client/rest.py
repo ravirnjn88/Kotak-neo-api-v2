@@ -48,6 +48,9 @@ class RESTClientObject(object):
         if 'Content-Type' not in headers:
             headers['Content-Type'] = 'application/json'
 
+        # seconds or (connect, read); read at call time so a caller can change configuration.timeout on a live client
+        timeout = getattr(self.configuration, "timeout", None) or 60
+
         try:
             if method in ['POST', 'PUT', 'PATCH', 'DELETE']:
                 if query_params:
@@ -56,25 +59,34 @@ class RESTClientObject(object):
                     request_body = None
                     if body is not None:
                         request_body = json.dumps(body)
-                    response = requests.post(url=url, headers=headers, data=request_body)
+                    response = requests.post(url=url, headers=headers, data=request_body, timeout=timeout)
                 elif re.search('x-www-form-urlencoded', headers['Content-Type'], re.IGNORECASE):
                     request_body = {}
                     if body is not None:
                         request_body["jData"] = json.dumps(body)
-                    response = requests.post(url=url, headers=headers, data=request_body)
+                    response = requests.post(url=url, headers=headers, data=request_body, timeout=timeout)
                 else:
                     msg = """In-Valid Content-Type in the Header Parameters"""
                     raise ApiException(status=0, reason=msg)
             elif method in ['GET']:
                 if query_params:
                     url += '?' + urlencode(query_params)
-                response = requests.get(url=url, headers=headers)
+                response = requests.get(url=url, headers=headers, timeout=timeout)
             else:
                 msg = """Cannot call the API with the provided HTTP Method"""
                 raise ApiException(status=0, reason=msg)
         except Exception as e:
             msg = "{0}\n{1}".format(type(e).__name__, str(e))
-            raise ApiException(status=0, reason=msg)
+            ex = ApiException(status=0, reason=msg)
+            # ConnectTimeout: the request never reached the server (safe to retry, an order was NOT placed).
+            # ReadTimeout: the request was sent, no answer in time -> outcome UNKNOWN (look the order up first).
+            if isinstance(e, requests.exceptions.ConnectTimeout):
+                ex.timeout = "connect"
+            elif isinstance(e, requests.exceptions.ReadTimeout):
+                ex.timeout = "read"
+            else:
+                ex.timeout = None
+            raise ex
 
         # if not 200 <= response.status_code <= 299:
         #     raise ApiException(status=response.status_code, reason=response.reason, body=response.text)

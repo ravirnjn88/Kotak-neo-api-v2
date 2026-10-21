@@ -334,3 +334,22 @@ client.logout()
 | *Subscribe*            | [**neo_api_client.subscribe**](docs/webSocket.md#websocket)                                | Subscribe                |
 | *Subscribe Order Feed* | [**neo_api_client.subscribeorderfeed**](docs/webSocket_orderfeed.md#websocket_orderfeed)   | Subscribe                |
 
+## HTTP timeout (fork addition, 2.0.1)
+
+Every REST call now has a timeout. Upstream had none, so a stalled connection blocked until something outside gave
+up (about 60 s observed).
+
+```python
+client = NeoAPI(environment="prod", consumer_key=key, timeout=60)   # default 60 s; or a (connect, read) tuple
+client.configuration.timeout = (3, 7)                                # can be changed on a live client
+client.configuration.download_timeout = 60                           # scrip-master CSV download
+```
+
+On a timeout the call returns `{"Error": ApiException}` (or `{"error": ...}` from the order APIs) with
+`ApiException.timeout`:
+
+- `"connect"`: the request never reached the server, so an order was **not** placed; safe to retry.
+- `"read"`: the request was sent but no answer came in time, so the outcome of an order call is **unknown**; look the
+  order up (order book / tag) before re-sending.
+- `None`: any other error.
+

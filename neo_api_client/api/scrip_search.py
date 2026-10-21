@@ -32,7 +32,8 @@ class ScripSearch(object):
             data = scrip_report.json()["data"]
             if exchange_segment is not None:
                 exchange_segment_csv = [file for file in data["filesPaths"] if exchange_segment.lower() in file.lower()]
-                response = requests.get(exchange_segment_csv[0])
+                response = requests.get(exchange_segment_csv[0], timeout=getattr(
+                    self.api_client.configuration, "download_timeout", None) or 60)
                 csv_text = response.text
                 df = pd.read_csv(io.StringIO(csv_text))
                 df = df.rename(columns=lambda x: x.strip())

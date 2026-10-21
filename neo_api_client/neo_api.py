@@ -37,7 +37,7 @@ class NeoAPI:
                 Sets the edit token, SID, RID, and server ID in the configuration.
     """
 
-    def __init__(self, environment="uat", access_token=None, neo_fin_key=None, consumer_key=None):
+    def __init__(self, environment="uat", access_token=None, neo_fin_key=None, consumer_key=None, timeout=60):
         """
     Initializes the class and sets up the necessary configurations for the API client.
 
@@ -47,6 +47,10 @@ class NeoAPI:
     consumer_key (str, optional): The consumer key used for authentication. Defaults to None.
     consumer_secret (str, optional): The consumer secret used for authentication. Defaults to None.
     neo_fin_key (str, optional): Finkey for tracking purpose
+    timeout (float or (connect, read) tuple, optional): HTTP timeout in seconds for every REST call. Defaults to 60.
+        Can be changed later on a live client: client.configuration.timeout = (3, 7).
+        On a timeout the call returns {"Error": ApiException} with ApiException.timeout = "connect" (the request
+        never reached the server) or "read" (sent, no answer: the outcome of an order call is UNKNOWN).
 
     Updates:
     self.on_message: sets the callback function for incoming messages for Websocket.
@@ -81,6 +85,7 @@ class NeoAPI:
         self.NeoWebSocket = None
         self.configuration.neo_fin_key = neo_fin_key
         self.configuration.consumer_key = consumer_key
+        self.configuration.timeout = timeout
 
     def place_order(
             self,

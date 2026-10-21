@@ -6,6 +6,9 @@ from neo_api_client.exceptions import ApiValueError
 from neo_api_client.urls import UAT_BASE_URL, BASE_URL
 from neo_api_client.settings import UAT_URL, PROD_URL
 
+DEFAULT_TIMEOUT = 60
+DEFAULT_DOWNLOAD_TIMEOUT = 60
+
 
 class NeoUtility:
     """
@@ -40,6 +43,11 @@ class NeoUtility:
         self.base_url = None
         self.totp_session_id = None
         self.consumer_key = consumer_key
+        # HTTP timeout for every REST call (seconds, or a (connect, read) tuple). Upstream had none, so a stalled
+        # connection blocked until something outside gave up (~60 s observed). Default 60 keeps that behaviour.
+        self.timeout = DEFAULT_TIMEOUT
+        # The scrip-master CSV download is large; it has its own timeout.
+        self.download_timeout = DEFAULT_DOWNLOAD_TIMEOUT
 
     # def convert_base64(self):
     #     """The Base64 Token Generation.
